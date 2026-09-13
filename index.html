@@ -1,193 +1,828 @@
 <!DOCTYPE html>
+
 <html lang="nl">
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta
+  name="viewport"
+  content="width=device-width,
+           initial-scale=1.0,
+           maximum-scale=1.0,
+           user-scalable=no"
+>
 
-  <title>Camera Test</title>
+<title>MFVU Ticket Scanner</title>
 
-  <style>
 
-    * {
-      box-sizing: border-box;
-    }
+<!-- QR scanner -->
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #111;
-      color: white;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+<script
+  src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+</script>
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
 
-    .container {
-      width: 100%;
-      max-width: 500px;
-      padding: 25px;
-      text-align: center;
-    }
+<style>
 
-    h1 {
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
+/* =====================================================
+   ALGEMEEN
+   ===================================================== */
 
-    p {
-      color: #aaa;
-      line-height: 1.5;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    button {
-      width: 100%;
-      padding: 18px;
-      margin-top: 20px;
 
-      border: none;
-      border-radius: 12px;
+body {
 
-      background: white;
-      color: #111;
+  margin: 0;
 
-      font-size: 19px;
-      font-weight: bold;
-    }
+  min-height: 100vh;
 
-    video {
-      display: none;
+  background: #111;
 
-      width: 100%;
-      margin-top: 25px;
+  color: white;
 
-      border-radius: 18px;
-      background: black;
-    }
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 
-    #status {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 12px;
-      background: #222;
-      line-height: 1.5;
-    }
+}
 
-    .success {
-      background: #075c2b !important;
-    }
 
-    .error {
-      background: #7d1724 !important;
-    }
+.container {
 
-  </style>
+  width: 100%;
+
+  max-width: 600px;
+
+  margin: auto;
+
+  padding: 20px;
+
+}
+
+
+.header {
+
+  text-align: center;
+
+  margin-bottom: 20px;
+
+}
+
+
+.header h1 {
+
+  margin: 5px 0;
+
+  font-size: 28px;
+
+}
+
+
+.header p {
+
+  color: #aaa;
+
+  margin: 5px 0;
+
+}
+
+
+/* =====================================================
+   PAGINA'S
+   ===================================================== */
+
+.page {
+
+  display: none;
+
+}
+
+
+.page.active {
+
+  display: block;
+
+}
+
+
+/* =====================================================
+   CAMERA CHECK
+   ===================================================== */
+
+.camera-check {
+
+  background: #222;
+
+  padding: 30px 20px;
+
+  border-radius: 18px;
+
+  text-align: center;
+
+}
+
+
+.camera-icon {
+
+  font-size: 65px;
+
+  margin-bottom: 15px;
+
+}
+
+
+.camera-check h2 {
+
+  margin-top: 0;
+
+}
+
+
+.camera-check p {
+
+  color: #bbb;
+
+  line-height: 1.5;
+
+}
+
+
+button {
+
+  width: 100%;
+
+  padding: 17px;
+
+  margin-top: 15px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+}
+
+
+.primary-button {
+
+  background: white;
+
+  color: #111;
+
+}
+
+
+.secondary-button {
+
+  background: #333;
+
+  color: white;
+
+}
+
+
+button:disabled {
+
+  opacity: 0.5;
+
+}
+
+
+/* =====================================================
+   CAMERA CHECK VIDEO
+   ===================================================== */
+
+#cameraPreview {
+
+  display: none;
+
+  width: 100%;
+
+  margin-top: 20px;
+
+  border-radius: 15px;
+
+  background: black;
+
+}
+
+
+.camera-status {
+
+  margin-top: 20px;
+
+  padding: 15px;
+
+  border-radius: 12px;
+
+  background: #333;
+
+  line-height: 1.5;
+
+}
+
+
+.camera-status.success {
+
+  background: #075c2b;
+
+}
+
+
+.camera-status.error {
+
+  background: #7d1724;
+
+}
+
+
+/* =====================================================
+   SCANNER
+   ===================================================== */
+
+#reader {
+
+  width: 100%;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  background: black;
+
+}
+
+
+#reader video {
+
+  border-radius: 18px;
+
+}
+
+
+/* =====================================================
+   SCANNER STATUS
+   ===================================================== */
+
+.scanner-status {
+
+  text-align: center;
+
+  margin-top: 15px;
+
+  color: #aaa;
+
+}
+
+
+/* =====================================================
+   RESULTAAT
+   ===================================================== */
+
+.result {
+
+  display: none;
+
+  margin-top: 20px;
+
+  padding: 30px 20px;
+
+  border-radius: 18px;
+
+  text-align: center;
+
+}
+
+
+.result.valid {
+
+  display: block;
+
+  background: #075c2b;
+
+}
+
+
+.result.already-used {
+
+  display: block;
+
+  background: #9a6700;
+
+}
+
+
+.result.invalid {
+
+  display: block;
+
+  background: #8a1826;
+
+}
+
+
+.result.error {
+
+  display: block;
+
+  background: #555;
+
+}
+
+
+.result-icon {
+
+  font-size: 65px;
+
+}
+
+
+.result-title {
+
+  font-size: 28px;
+
+  font-weight: 800;
+
+  margin-top: 10px;
+
+}
+
+
+.result-ticket {
+
+  font-size: 21px;
+
+  font-weight: bold;
+
+  margin-top: 15px;
+
+}
+
+
+.result-name {
+
+  font-size: 19px;
+
+  margin-top: 5px;
+
+}
+
+
+/* =====================================================
+   HANDMATIG
+   ===================================================== */
+
+.manual {
+
+  margin-top: 20px;
+
+  padding: 18px;
+
+  background: #222;
+
+  border-radius: 15px;
+
+}
+
+
+.manual-title {
+
+  font-weight: bold;
+
+}
+
+
+.manual input {
+
+  width: 100%;
+
+  padding: 14px;
+
+  margin-top: 10px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  font-size: 18px;
+
+}
+
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+.loading {
+
+  display: none;
+
+  text-align: center;
+
+  margin-top: 20px;
+
+  color: #aaa;
+
+}
+
+
+/* =====================================================
+   SCANNER HEADER
+   ===================================================== */
+
+.scanner-header {
+
+  text-align: center;
+
+  margin-bottom: 15px;
+
+}
+
+
+.scanner-header h2 {
+
+  margin-bottom: 5px;
+
+}
+
+
+.scanner-header p {
+
+  color: #aaa;
+
+  margin-top: 0;
+
+}
+
+</style>
 
 </head>
 
 
 <body>
 
-  <div class="container">
 
-    <h1>📷 Camera Test</h1>
+<div class="container">
+
+
+<!-- =================================================
+     CAMERA CHECK
+     ================================================= -->
+
+<div
+  id="cameraPage"
+  class="page active"
+>
+
+
+  <div class="header">
+
+    <h1>
+      🎟 MFVU Ticket Scanner
+    </h1>
 
     <p>
-      Deze pagina test alleen of je telefoon
-      toegang kan krijgen tot de camera.
+      Controleer eerst de camera
     </p>
-
-    <button id="startButton">
-      📷 Camera starten
-    </button>
-
-    <video
-      id="video"
-      autoplay
-      playsinline
-      muted>
-    </video>
-
-    <div id="status">
-      Nog niet getest.
-    </div>
 
   </div>
 
 
+  <div class="camera-check">
+
+
+    <div class="camera-icon">
+      📷
+    </div>
+
+
+    <h2>
+      Camera controleren
+    </h2>
+
+
+    <p>
+
+      Voordat je tickets kunt scannen,
+      controleren we of deze telefoon
+      toegang heeft tot de camera.
+
+      <br><br>
+
+      Dit hoeft maar één keer per telefoon.
+
+    </p>
+
+
+    <button
+      id="cameraButton"
+      class="primary-button"
+      onclick="testCamera()"
+    >
+
+      📷 Camera testen
+
+    </button>
+
+
+    <video
+      id="cameraPreview"
+      autoplay
+      playsinline
+      muted
+    ></video>
+
+
+    <div
+      id="cameraStatus"
+      class="camera-status"
+    >
+
+      Camera nog niet getest.
+
+    </div>
+
+
+    <button
+      id="continueButton"
+      class="primary-button"
+      style="display:none;"
+      onclick="openScanner()"
+    >
+
+      ✅ Ga naar scanner
+
+    </button>
+
+
+  </div>
+
+</div>
+
+
+
+<!-- =================================================
+     SCANNER PAGINA
+     ================================================= -->
+
+<div
+  id="scannerPage"
+  class="page"
+>
+
+
+  <div class="header">
+
+    <h1>
+      🎟 MFVU Ticket Scanner
+    </h1>
+
+    <p>
+      Scan een ticket
+    </p>
+
+  </div>
+
+
+  <div class="scanner-header">
+
+    <h2>
+      Houd de QR-code voor de camera
+    </h2>
+
+    <p>
+      De controle gebeurt automatisch.
+    </p>
+
+  </div>
+
+
+  <div id="reader"></div>
+
+
+  <div
+    id="scannerStatus"
+    class="scanner-status"
+  >
+
+    Scanner actief
+
+  </div>
+
+
+  <!-- RESULTAAT -->
+
+  <div
+    id="result"
+    class="result"
+  >
+
+    <div
+      id="resultIcon"
+      class="result-icon"
+    ></div>
+
+
+    <div
+      id="resultTitle"
+      class="result-title"
+    ></div>
+
+
+    <div
+      id="resultTicket"
+      class="result-ticket"
+    ></div>
+
+
+    <div
+      id="resultName"
+      class="result-name"
+    ></div>
+
+  </div>
+
+
+  <!-- VOLGENDE SCAN -->
+
+  <button
+    id="scanAgainButton"
+    class="primary-button"
+    style="display:none;"
+    onclick="scanAgain()"
+  >
+
+    📷 Volgend ticket scannen
+
+  </button>
+
+
+  <!-- HANDMATIG -->
+
+  <div class="manual">
+
+    <div class="manual-title">
+
+      QR-code werkt niet?
+
+    </div>
+
+
+    <input
+      id="manualTicket"
+      type="text"
+      placeholder="Voer ticketnummer in"
+    >
+
+
+    <button
+      class="secondary-button"
+      onclick="manualCheck()"
+    >
+
+      Controleer ticket
+
+    </button>
+
+  </div>
+
+
+  <div
+    id="loading"
+    class="loading"
+  >
+
+    ⏳ Ticket wordt gecontroleerd...
+
+  </div>
+
+
+</div>
+
+
+</div>
+
+
+
 <script>
 
-const button =
-  document.getElementById("startButton");
 
-const video =
-  document.getElementById("video");
-
-const status =
-  document.getElementById("status");
+/* =====================================================
+   INSTELLINGEN
+   ===================================================== */
 
 
-button.addEventListener(
-  "click",
-  startCamera
-);
+/*
+ * Jouw Google Apps Script URL.
+ */
+
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbyX36SNH_aBF6IyVeQz4BTJQWhuhuh3NsHcPo1uPpcKUgeaXIX8L6yE-ajI9B29CpI/exec';
 
 
-async function startCamera() {
 
-  status.className = "";
+/* =====================================================
+   VARIABELEN
+   ===================================================== */
+
+let cameraStream = null;
+
+let scanner = null;
+
+let scannerRunning = false;
+
+let processing = false;
+
+
+
+/* =====================================================
+   CAMERA TESTEN
+   ===================================================== */
+
+async function testCamera() {
+
+
+  const button =
+    document.getElementById(
+      'cameraButton'
+    );
+
+
+  const status =
+    document.getElementById(
+      'cameraStatus'
+    );
+
+
+  const preview =
+    document.getElementById(
+      'cameraPreview'
+    );
+
+
+  const continueButton =
+    document.getElementById(
+      'continueButton'
+    );
+
+
+  button.disabled =
+    true;
+
+
+  status.className =
+    'camera-status';
+
 
   status.textContent =
-    "Camera wordt gestart...";
-
-
-  /*
-   * Eerst controleren of de browser
-   * camera-toegang ondersteunt.
-   */
-
-  if (
-    !navigator.mediaDevices ||
-    !navigator.mediaDevices.getUserMedia
-  ) {
-
-    status.className = "error";
-
-    status.textContent =
-      "❌ Deze browser ondersteunt geen camera-toegang via deze pagina.";
-
-    return;
-  }
+    '📷 Camera wordt gestart...';
 
 
   try {
 
+
     /*
-     * Camera openen.
-     *
-     * Dit hoort op iPhone Safari
-     * de cameramelding te veroorzaken.
+     * Controleer browserondersteuning.
      */
 
-    const stream =
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
+
+      throw new Error(
+        'Deze browser ondersteunt geen cameratoegang.'
+      );
+
+    }
+
+
+    /*
+     * Camera openen.
+     */
+
+    cameraStream =
       await navigator.mediaDevices.getUserMedia({
 
         video: {
+
           facingMode: {
-            ideal: "environment"
+            ideal: 'environment'
           }
+
         },
 
         audio: false
@@ -196,108 +831,971 @@ async function startCamera() {
 
 
     /*
-     * Camerastream aan video koppelen.
+     * Preview tonen.
      */
 
-    video.srcObject =
-      stream;
+    preview.srcObject =
+      cameraStream;
 
-    video.style.display =
-      "block";
 
+    preview.style.display =
+      'block';
+
+
+    /*
+     * Camera is succesvol.
+     */
 
     status.className =
-      "success";
+      'camera-status success';
+
 
     status.innerHTML =
-      "✅ <strong>Camera werkt!</strong><br><br>" +
-      "De camera is succesvol geopend.";
+      '✅ <strong>Camera werkt!</strong><br>' +
+      'Je kunt nu naar de ticketscanner.';
 
 
     button.textContent =
-      "✅ Camera werkt";
+      '✅ Camera werkt';
 
 
-    button.disabled =
-      true;
+    /*
+     * Doorgaan-knop tonen.
+     */
+
+    continueButton.style.display =
+      'block';
+
 
   }
 
   catch (error) {
 
-    console.error(error);
+
+    console.error(
+      error
+    );
+
+
+    button.disabled =
+      false;
 
 
     status.className =
-      "error";
+      'camera-status error';
 
 
     let message =
-      "❌ Camera kon niet worden geopend.";
+      '❌ Camera kon niet worden geopend.';
 
 
     if (
       error.name ===
-      "NotAllowedError"
+      'NotAllowedError'
     ) {
 
       message =
-        "❌ Cameratoegang is geweigerd.<br><br>" +
-        "Controleer de camera-instellingen van Safari.";
+        '❌ Cameratoegang is geweigerd. ' +
+        'Geef Safari toegang tot de camera.';
 
     }
 
 
     else if (
       error.name ===
-      "NotFoundError"
+      'NotFoundError'
     ) {
 
       message =
-        "❌ Er is geen camera gevonden.";
+        '❌ Er is geen camera gevonden.';
 
     }
 
 
     else if (
       error.name ===
-      "NotReadableError"
+      'NotReadableError'
     ) {
 
       message =
-        "❌ De camera is momenteel in gebruik door een andere app.";
+        '❌ De camera is momenteel in gebruik door een andere app.';
 
     }
 
 
     else if (
       error.name ===
-      "SecurityError"
+      'SecurityError'
     ) {
 
       message =
-        "❌ De browser blokkeert toegang tot de camera.";
-
-    }
-
-
-    else if (
-      error.name ===
-      "TypeError"
-    ) {
-
-      message =
-        "❌ De pagina wordt niet in een beveiligde HTTPS-omgeving geopend.";
+        '❌ De browser blokkeert cameratoegang.';
 
     }
 
 
     status.innerHTML =
       message +
-      "<br><br>" +
-      "<small>Technische fout: " +
+      '<br><br>' +
+      '<small>' +
       error.name +
-      "</small>";
+      '</small>';
+
+  }
+
+}
+
+
+
+/* =====================================================
+   NA CAMERA CHECK → SCANNER
+   ===================================================== */
+
+async function openScanner() {
+
+
+  /*
+   * Camera-preview stoppen.
+   */
+
+  if (cameraStream) {
+
+    cameraStream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
+
+    cameraStream =
+      null;
+
+  }
+
+
+  /*
+   * Camera-check verbergen.
+   */
+
+  document
+    .getElementById(
+      'cameraPage'
+    )
+    .classList
+    .remove('active');
+
+
+  /*
+   * Scanner tonen.
+   */
+
+  document
+    .getElementById(
+      'scannerPage'
+    )
+    .classList
+    .add('active');
+
+
+  /*
+   * Scanner starten.
+   */
+
+  await startQRScanner();
+
+}
+
+
+
+/* =====================================================
+   QR SCANNER STARTEN
+   ===================================================== */
+
+async function startQRScanner() {
+
+
+  processing =
+    false;
+
+
+  /*
+   * Oude scanner opruimen.
+   */
+
+  if (scanner) {
+
+    try {
+
+      if (scannerRunning) {
+
+        await scanner.stop();
+
+      }
+
+    }
+
+    catch (error) {}
+
+    try {
+
+      await scanner.clear();
+
+    }
+
+    catch (error) {}
+
+  }
+
+
+  scanner =
+    new Html5Qrcode(
+      'reader'
+    );
+
+
+  try {
+
+
+    await scanner.start(
+
+      {
+        facingMode: {
+          ideal: 'environment'
+        }
+      },
+
+
+      {
+
+        fps: 10,
+
+        qrbox: {
+
+          width: 250,
+
+          height: 250
+
+        }
+
+      },
+
+
+      function(decodedText) {
+
+        onQRCode(
+          decodedText
+        );
+
+      },
+
+
+      function(errorMessage) {
+
+        /*
+         * Geen QR gevonden.
+         *
+         * Dit is normaal en hoeft
+         * niets te doen.
+         */
+
+      }
+
+    );
+
+
+    scannerRunning =
+      true;
+
+
+    document
+      .getElementById(
+        'scannerStatus'
+      )
+      .textContent =
+      'Scanner actief — houd een QR-code voor de camera.';
+
+
+  }
+
+  catch (error) {
+
+
+    console.error(
+      error
+    );
+
+
+    document
+      .getElementById(
+        'scannerStatus'
+      )
+      .textContent =
+      '❌ Scanner kon niet worden gestart.';
+
+  }
+
+}
+
+
+
+/* =====================================================
+   QR CODE GEVONDEN
+   ===================================================== */
+
+async function onQRCode(
+  decodedText
+) {
+
+
+  /*
+   * Voorkom dubbele scans.
+   */
+
+  if (processing) {
+
+    return;
+
+  }
+
+
+  processing =
+    true;
+
+
+  const ticketNumber =
+    decodedText.trim();
+
+
+  /*
+   * Scanner stoppen.
+   */
+
+  if (
+    scanner &&
+    scannerRunning
+  ) {
+
+    try {
+
+      await scanner.stop();
+
+    }
+
+    catch (error) {}
+
+    scannerRunning =
+      false;
+
+  }
+
+
+  /*
+   * Ticket controleren.
+   */
+
+  checkTicket(
+    ticketNumber
+  );
+
+}
+
+
+
+/* =====================================================
+   TICKET CONTROLEREN
+   ===================================================== */
+
+function checkTicket(
+  ticketNumber
+) {
+
+
+  showLoading(
+    true
+  );
+
+
+  /*
+   * Unieke callbacknaam maken.
+   */
+
+  const callbackName =
+    'ticketCallback_' +
+    Date.now() +
+    '_' +
+    Math.random()
+      .toString(36)
+      .substring(2);
+
+
+  /*
+   * Callback registreren.
+   */
+
+  window[callbackName] =
+    function(data) {
+
+
+      /*
+       * Script verwijderen.
+       */
+
+      if (
+        script.parentNode
+      ) {
+
+        script.parentNode
+          .removeChild(
+            script
+          );
+
+      }
+
+
+      /*
+       * Callback opruimen.
+       */
+
+      try {
+
+        delete window[
+          callbackName
+        ];
+
+      }
+
+      catch (error) {}
+
+
+      /*
+       * Resultaat verwerken.
+       */
+
+      showLoading(
+        false
+      );
+
+
+      handleResult(
+        data
+      );
+
+    };
+
+
+  /*
+   * API URL maken.
+   */
+
+  const url =
+    API_URL +
+    '?ticket=' +
+    encodeURIComponent(
+      ticketNumber
+    ) +
+    '&callback=' +
+    encodeURIComponent(
+      callbackName
+    );
+
+
+  /*
+   * Script-tag maken.
+   *
+   * JSONP voorkomt CORS-problemen.
+   */
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+
+  script.src =
+    url;
+
+
+  script.async =
+    true;
+
+
+  /*
+   * Fout bij verbinding.
+   */
+
+  script.onerror =
+    function() {
+
+
+      showLoading(
+        false
+      );
+
+
+      try {
+
+        delete window[
+          callbackName
+        ];
+
+      }
+
+      catch (error) {}
+
+
+      showResult(
+
+        'error',
+
+        ticketNumber,
+
+        '',
+
+        'Kan geen verbinding maken met het ticketsysteem.'
+
+      );
+
+    };
+
+
+  document
+    .body
+    .appendChild(
+      script
+    );
+
+}
+
+
+
+/* =====================================================
+   RESULTAAT VERWERKEN
+   ===================================================== */
+
+function handleResult(
+  result
+) {
+
+
+  if (!result) {
+
+    showResult(
+
+      'error',
+
+      '',
+
+      '',
+
+      'Geen geldig antwoord ontvangen.'
+
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * GELDIG
+   */
+
+  if (
+    result.status ===
+    'valid'
+  ) {
+
+    showResult(
+
+      'valid',
+
+      result.ticketNumber,
+
+      result.name,
+
+      'TICKET GELDIG!'
+
+    );
+
+
+    vibrate(
+      [200]
+    );
+
+
+    return;
+
+  }
+
+
+  /*
+   * AL GEBRUIKT
+   */
+
+  if (
+    result.status ===
+    'already_used'
+  ) {
+
+    showResult(
+
+      'already-used',
+
+      result.ticketNumber,
+
+      result.name,
+
+      'TICKET AL GEBRUIKT!'
+
+    );
+
+
+    vibrate(
+      [150, 100, 150]
+    );
+
+
+    return;
+
+  }
+
+
+  /*
+   * ONGELDIG
+   */
+
+  if (
+    result.status ===
+    'not_found'
+  ) {
+
+    showResult(
+
+      'invalid',
+
+      result.ticketNumber,
+
+      '',
+
+      'ONGELDIG TICKET!'
+
+    );
+
+
+    vibrate(
+      [400]
+    );
+
+
+    return;
+
+  }
+
+
+  /*
+   * OVERIGE FOUT
+   */
+
+  showResult(
+
+    'error',
+
+    result.ticketNumber || '',
+
+    result.name || '',
+
+    result.message ||
+      'Er is iets misgegaan.'
+
+  );
+
+}
+
+
+
+/* =====================================================
+   RESULTAAT TONEN
+   ===================================================== */
+
+function showResult(
+
+  type,
+
+  ticket,
+
+  name,
+
+  message
+
+) {
+
+
+  const result =
+    document.getElementById(
+      'result'
+    );
+
+
+  const icon =
+    document.getElementById(
+      'resultIcon'
+    );
+
+
+  const title =
+    document.getElementById(
+      'resultTitle'
+    );
+
+
+  const ticketElement =
+    document.getElementById(
+      'resultTicket'
+    );
+
+
+  const nameElement =
+    document.getElementById(
+      'resultName'
+    );
+
+
+  const scanAgainButton =
+    document.getElementById(
+      'scanAgainButton'
+    );
+
+
+  /*
+   * Class instellen.
+   */
+
+  result.className =
+    'result ' +
+    type;
+
+
+  result.style.display =
+    'block';
+
+
+  /*
+   * Icoon.
+   */
+
+  if (
+    type ===
+    'valid'
+  ) {
+
+    icon.textContent =
+      '✅';
+
+  }
+
+  else if (
+    type ===
+    'already-used'
+  ) {
+
+    icon.textContent =
+      '⚠️';
+
+  }
+
+  else if (
+    type ===
+    'invalid'
+  ) {
+
+    icon.textContent =
+      '❌';
+
+  }
+
+  else {
+
+    icon.textContent =
+      '⚠️';
+
+  }
+
+
+  title.textContent =
+    message;
+
+
+  ticketElement.textContent =
+    ticket
+      ? 'Ticket: ' + ticket
+      : '';
+
+
+  nameElement.textContent =
+    name
+      ? name
+      : '';
+
+
+  /*
+   * Knop volgende scan.
+   */
+
+  scanAgainButton.style.display =
+    'block';
+
+
+  document
+    .getElementById(
+      'scannerStatus'
+    )
+    .textContent =
+    '';
+
+}
+
+
+
+/* =====================================================
+   VOLGENDE SCAN
+   ===================================================== */
+
+async function scanAgain() {
+
+
+  document
+    .getElementById(
+      'result'
+    )
+    .style.display =
+    'none';
+
+
+  document
+    .getElementById(
+      'scanAgainButton'
+    )
+    .style.display =
+    'none';
+
+
+  document
+    .getElementById(
+      'scannerStatus'
+    )
+    .textContent =
+    'Scanner opnieuw starten...';
+
+
+  processing =
+    false;
+
+
+  await startQRScanner();
+
+}
+
+
+
+/* =====================================================
+   HANDMATIGE INVOER
+   ===================================================== */
+
+function manualCheck() {
+
+
+  const input =
+    document.getElementById(
+      'manualTicket'
+    );
+
+
+  const ticket =
+    input.value.trim();
+
+
+  if (!ticket) {
+
+    return;
+
+  }
+
+
+  /*
+   * Scanner stoppen als deze
+   * nog actief is.
+   */
+
+  if (
+    scanner &&
+    scannerRunning
+  ) {
+
+    scanner
+      .stop()
+      .catch(
+        function() {}
+      );
+
+    scannerRunning =
+      false;
+
+  }
+
+
+  processing =
+    true;
+
+
+  input.value =
+    '';
+
+
+  checkTicket(
+    ticket
+  );
+
+}
+
+
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+function showLoading(
+  visible
+) {
+
+
+  document
+    .getElementById(
+      'loading'
+    )
+    .style.display =
+    visible
+      ? 'block'
+      : 'none';
+
+}
+
+
+
+/* =====================================================
+   TRILLEN
+   ===================================================== */
+
+function vibrate(
+  pattern
+) {
+
+
+  if (
+    navigator.vibrate
+  ) {
+
+    navigator.vibrate(
+      pattern
+    );
 
   }
 
