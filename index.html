@@ -1,408 +1,225 @@
 <!DOCTYPE html>
-
 <html lang="nl">
 
 <head>
 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-<title>Ticket Scanner</title>
+  <title>Camera Test</title>
 
-<script
-  src="https://unpkg.com/html5-qrcode"
-  type="text/javascript">
-</script>
+  <style>
 
-<style>
+    * {
+      box-sizing: border-box;
+    }
 
-* {
-  box-sizing: border-box;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #111;
+      color: white;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  background: #111;
-  color: white;
-}
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.container {
-  width: 100%;
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-}
+    .container {
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+      text-align: center;
+    }
 
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-}
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
 
-.header h1 {
-  margin: 5px 0;
-  font-size: 28px;
-}
+    p {
+      color: #aaa;
+      line-height: 1.5;
+    }
 
-.header p {
-  margin: 5px 0;
-  color: #aaa;
-}
+    button {
+      width: 100%;
+      padding: 18px;
+      margin-top: 20px;
 
-/* STARTSCHERM */
+      border: none;
+      border-radius: 12px;
 
-.start {
-  text-align: center;
-  background: #222;
-  padding: 30px 20px;
-  border-radius: 18px;
-}
+      background: white;
+      color: #111;
 
-.camera-icon {
-  font-size: 65px;
-  margin-bottom: 15px;
-}
+      font-size: 19px;
+      font-weight: bold;
+    }
 
-.start-text {
-  color: #bbb;
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
+    video {
+      display: none;
 
-.start-button {
-  background: white;
-  color: #111;
-  font-size: 20px;
-  font-weight: bold;
-}
+      width: 100%;
+      margin-top: 25px;
 
-/* SCANNER */
+      border-radius: 18px;
+      background: black;
+    }
 
-#reader {
-  width: 100%;
-  display: none;
-  overflow: hidden;
-  border-radius: 18px;
-  background: #000;
-}
+    #status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #222;
+      line-height: 1.5;
+    }
 
-#reader video {
-  border-radius: 18px;
-}
+    .success {
+      background: #075c2b !important;
+    }
 
-/* RESULTAAT */
+    .error {
+      background: #7d1724 !important;
+    }
 
-.result {
-  display: none;
-  margin-top: 20px;
-  padding: 25px;
-  border-radius: 18px;
-  text-align: center;
-}
-
-.result.valid {
-  display: block;
-  background: #0b6b35;
-}
-
-.result.already-used {
-  display: block;
-  background: #9a6700;
-}
-
-.result.invalid {
-  display: block;
-  background: #a61b2b;
-}
-
-.result.error {
-  display: block;
-  background: #555;
-}
-
-.icon {
-  font-size: 60px;
-  margin-bottom: 10px;
-}
-
-.status {
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-
-.ticket {
-  font-size: 21px;
-  font-weight: 700;
-}
-
-.name {
-  font-size: 19px;
-  margin-top: 5px;
-}
-
-/* KNOPPEN */
-
-button {
-  width: 100%;
-  padding: 17px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.scan-again {
-  display: none;
-  background: white;
-  color: #111;
-}
-
-/* HANDMATIGE INVOER */
-
-.manual {
-  margin-top: 20px;
-  padding: 15px;
-  background: #222;
-  border-radius: 15px;
-}
-
-.manual input {
-  width: 100%;
-  padding: 14px;
-  margin-top: 8px;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-}
-
-.manual button {
-  background: #444;
-  color: white;
-}
-
-/* FOUTMELDING */
-
-.help {
-  display: none;
-  margin-top: 15px;
-  padding: 15px;
-  background: #333;
-  border-radius: 10px;
-  color: #ccc;
-  line-height: 1.5;
-  font-size: 14px;
-}
-
-</style>
+  </style>
 
 </head>
 
+
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <div class="header">
-
-    <h1>🎟 Ticket Scanner</h1>
+    <h1>📷 Camera Test</h1>
 
     <p>
-      Scan de QR-code van het ticket
+      Deze pagina test alleen of je telefoon
+      toegang kan krijgen tot de camera.
     </p>
 
-  </div>
-
-
-  <!-- STARTSCHERM -->
-
-  <div id="start" class="start">
-
-    <div class="camera-icon">
-      📷
-    </div>
-
-    <div class="start-text">
-
-      Druk op onderstaande knop om de camera te starten.
-
-      <br><br>
-
-      Bij het eerste gebruik vraagt Safari om cameratoegang.
-
-    </div>
-
-    <button
-      class="start-button"
-      onclick="startScanner()"
-    >
+    <button id="startButton">
       📷 Camera starten
     </button>
 
-  </div>
+    <video
+      id="video"
+      autoplay
+      playsinline
+      muted>
+    </video>
 
-
-  <!-- QR SCANNER -->
-
-  <div id="reader"></div>
-
-
-  <!-- RESULTAAT -->
-
-  <div id="result" class="result">
-
-    <div id="icon" class="icon"></div>
-
-    <div id="status" class="status"></div>
-
-    <div id="ticket" class="ticket"></div>
-
-    <div id="name" class="name"></div>
+    <div id="status">
+      Nog niet getest.
+    </div>
 
   </div>
-
-
-  <!-- VOLGENDE SCAN -->
-
-  <button
-    id="scanAgain"
-    class="scan-again"
-    onclick="startScanner()"
-  >
-    📷 Scan volgend ticket
-  </button>
-
-
-  <!-- HANDMATIGE INVOER -->
-
-  <div class="manual">
-
-    <strong>
-      QR-code werkt niet?
-    </strong>
-
-    <input
-      id="manualTicket"
-      type="text"
-      placeholder="Ticketnummer"
-    >
-
-    <button onclick="manualCheck()">
-      Controleer ticket
-    </button>
-
-  </div>
-
-
-  <div id="help" class="help">
-
-    <strong>
-      Camera kan niet worden geopend.
-    </strong>
-
-    <br><br>
-
-    Controleer of je Safari toegang tot de camera heeft gegeven.
-
-  </div>
-
-</div>
 
 
 <script>
 
-/* =====================================================
-   GOOGLE APPS SCRIPT
-   ===================================================== */
+const button =
+  document.getElementById("startButton");
 
-const API_URL =
-  'https://script.google.com/macros/s/AKfycbyX36SNH_aBF6IyVeQz4BTJQWhuhuh3NsHcPo1uPpcKUgeaXIX8L6yE-ajI9B29CpI/exec';
+const video =
+  document.getElementById("video");
 
-
-/* =====================================================
-   VARIABELEN
-   ===================================================== */
-
-let scanner = null;
-
-let scanning = false;
-
-let processing = false;
+const status =
+  document.getElementById("status");
 
 
-/* =====================================================
-   SCANNER STARTEN
-   ===================================================== */
-
-async function startScanner() {
-
-  processing = false;
-
-  hideResult();
+button.addEventListener(
+  "click",
+  startCamera
+);
 
 
-  if (scanner) {
+async function startCamera() {
 
-    try {
-      await scanner.clear();
-    }
+  status.className = "";
 
-    catch (error) {}
+  status.textContent =
+    "Camera wordt gestart...";
 
+
+  /*
+   * Eerst controleren of de browser
+   * camera-toegang ondersteunt.
+   */
+
+  if (
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
+  ) {
+
+    status.className = "error";
+
+    status.textContent =
+      "❌ Deze browser ondersteunt geen camera-toegang via deze pagina.";
+
+    return;
   }
-
-
-  scanner = null;
-
-  scanning = false;
-
-
-  document.getElementById('start').style.display = 'none';
-
-  document.getElementById('reader').style.display = 'block';
-
-
-  scanner =
-    new Html5Qrcode('reader');
 
 
   try {
 
-    await scanner.start(
+    /*
+     * Camera openen.
+     *
+     * Dit hoort op iPhone Safari
+     * de cameramelding te veroorzaken.
+     */
 
-      {
-        facingMode: {
-          ideal: 'environment'
-        }
-      },
+    const stream =
+      await navigator.mediaDevices.getUserMedia({
 
-      {
-        fps: 10,
+        video: {
+          facingMode: {
+            ideal: "environment"
+          }
+        },
 
-        qrbox: {
-          width: 250,
-          height: 250
-        }
-      },
+        audio: false
 
-      function(decodedText) {
-
-        onScanSuccess(decodedText);
-
-      },
-
-      function(error) {}
-
-    );
+      });
 
 
-    scanning = true;
+    /*
+     * Camerastream aan video koppelen.
+     */
+
+    video.srcObject =
+      stream;
+
+    video.style.display =
+      "block";
+
+
+    status.className =
+      "success";
+
+    status.innerHTML =
+      "✅ <strong>Camera werkt!</strong><br><br>" +
+      "De camera is succesvol geopend.";
+
+
+    button.textContent =
+      "✅ Camera werkt";
+
+
+    button.disabled =
+      true;
 
   }
 
@@ -410,334 +227,77 @@ async function startScanner() {
 
     console.error(error);
 
-    showCameraError(error);
 
-  }
-
-}
+    status.className =
+      "error";
 
 
-/* =====================================================
-   QR-CODE GEVONDEN
-   ===================================================== */
-
-async function onScanSuccess(decodedText) {
-
-  if (processing) {
-    return;
-  }
-
-  processing = true;
-
-  const ticketNumber =
-    decodedText.trim();
+    let message =
+      "❌ Camera kon niet worden geopend.";
 
 
-  if (scanner && scanning) {
+    if (
+      error.name ===
+      "NotAllowedError"
+    ) {
 
-    try {
-
-      await scanner.stop();
-
-      scanning = false;
+      message =
+        "❌ Cameratoegang is geweigerd.<br><br>" +
+        "Controleer de camera-instellingen van Safari.";
 
     }
 
-    catch (error) {}
 
-  }
+    else if (
+      error.name ===
+      "NotFoundError"
+    ) {
 
-
-  checkTicket(ticketNumber);
-
-}
-
-
-/* =====================================================
-   TICKET CONTROLEREN
-   ===================================================== */
-
-function checkTicket(ticketNumber) {
-
-  const url =
-    API_URL +
-    '?ticket=' +
-    encodeURIComponent(ticketNumber);
-
-
-  fetch(
-    url,
-    {
-      method: 'GET',
-      cache: 'no-store'
-    }
-  )
-
-  .then(function(response) {
-
-    if (!response.ok) {
-
-      throw new Error(
-        'HTTP ' + response.status
-      );
+      message =
+        "❌ Er is geen camera gevonden.";
 
     }
 
-    return response.json();
 
-  })
+    else if (
+      error.name ===
+      "NotReadableError"
+    ) {
 
-  .then(function(data) {
+      message =
+        "❌ De camera is momenteel in gebruik door een andere app.";
 
-    handleResult(data);
+    }
 
-  })
 
-  .catch(function(error) {
+    else if (
+      error.name ===
+      "SecurityError"
+    ) {
 
-    console.error(error);
+      message =
+        "❌ De browser blokkeert toegang tot de camera.";
 
-    showResult(
-      'error',
-      ticketNumber,
-      '',
-      'Kan geen verbinding maken met het ticketsysteem.'
-    );
+    }
 
-  });
 
-}
+    else if (
+      error.name ===
+      "TypeError"
+    ) {
 
+      message =
+        "❌ De pagina wordt niet in een beveiligde HTTPS-omgeving geopend.";
 
-/* =====================================================
-   RESULTAAT VERWERKEN
-   ===================================================== */
+    }
 
-function handleResult(result) {
 
-  if (!result) {
-
-    showResult(
-      'error',
-      '',
-      '',
-      'Geen geldig antwoord ontvangen.'
-    );
-
-    return;
-
-  }
-
-
-  if (result.status === 'valid') {
-
-    showResult(
-      'valid',
-      result.ticketNumber,
-      result.name,
-      'TICKET GELDIG!'
-    );
-
-    vibrate([200]);
-
-    return;
-
-  }
-
-
-  if (result.status === 'already_used') {
-
-    showResult(
-      'already-used',
-      result.ticketNumber,
-      result.name,
-      'TICKET AL GEBRUIKT!'
-    );
-
-    vibrate([150, 100, 150]);
-
-    return;
-
-  }
-
-
-  if (result.status === 'not_found') {
-
-    showResult(
-      'invalid',
-      result.ticketNumber,
-      '',
-      'ONGELDIG TICKET!'
-    );
-
-    vibrate([400]);
-
-    return;
-
-  }
-
-
-  showResult(
-    'error',
-    result.ticketNumber || '',
-    result.name || '',
-    result.message || 'Er ging iets mis.'
-  );
-
-}
-
-
-/* =====================================================
-   RESULTAAT TONEN
-   ===================================================== */
-
-function showResult(
-  type,
-  ticket,
-  name,
-  message
-) {
-
-  const result =
-    document.getElementById('result');
-
-  const icon =
-    document.getElementById('icon');
-
-  const status =
-    document.getElementById('status');
-
-  const ticketElement =
-    document.getElementById('ticket');
-
-  const nameElement =
-    document.getElementById('name');
-
-  const button =
-    document.getElementById('scanAgain');
-
-
-  result.className =
-    'result ' + type;
-
-  result.style.display =
-    'block';
-
-
-  if (type === 'valid') {
-
-    icon.textContent = '✅';
-
-  }
-
-  else if (type === 'already-used') {
-
-    icon.textContent = '⚠️';
-
-  }
-
-  else if (type === 'invalid') {
-
-    icon.textContent = '❌';
-
-  }
-
-  else {
-
-    icon.textContent = '⚠️';
-
-  }
-
-
-  status.textContent = message;
-
-  ticketElement.textContent =
-    ticket ? 'Ticket: ' + ticket : '';
-
-  nameElement.textContent =
-    name || '';
-
-
-  button.style.display =
-    'block';
-
-}
-
-
-/* =====================================================
-   RESULTAAT VERBERGEN
-   ===================================================== */
-
-function hideResult() {
-
-  document.getElementById('result').style.display = 'none';
-
-  document.getElementById('scanAgain').style.display = 'none';
-
-}
-
-
-/* =====================================================
-   HANDMATIGE INVOER
-   ===================================================== */
-
-function manualCheck() {
-
-  const input =
-    document.getElementById('manualTicket');
-
-  const ticket =
-    input.value.trim();
-
-
-  if (!ticket) {
-    return;
-  }
-
-
-  processing = true;
-
-  checkTicket(ticket);
-
-  input.value = '';
-
-}
-
-
-/* =====================================================
-   CAMERA FOUT
-   ===================================================== */
-
-function showCameraError(error) {
-
-  console.error(
-    'Camera error:',
-    error
-  );
-
-
-  document.getElementById('help').style.display = 'block';
-
-
-  showResult(
-    'error',
-    '',
-    '',
-    'De camera kan niet worden geopend.'
-  );
-
-}
-
-
-/* =====================================================
-   TRILLEN
-   ===================================================== */
-
-function vibrate(pattern) {
-
-  if (navigator.vibrate) {
-
-    navigator.vibrate(pattern);
+    status.innerHTML =
+      message +
+      "<br><br>" +
+      "<small>Technische fout: " +
+      error.name +
+      "</small>";
 
   }
 
